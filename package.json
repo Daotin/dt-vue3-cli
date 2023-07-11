@@ -1,0 +1,33 @@
+{
+  "name": "dt-vue3-cli",
+  "version": "1.0.0",
+  "description": "create-vue3-template 模板配套脚手架工具",
+  "main": "index.js",
+  "bin": {
+    "dt-vue3-cli": "bin/init.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Daotin/dt-vue3-cli.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Daotin/dt-vue3-cli/issues"
+  },
+  "homepage": "https://github.com/Daotin/dt-vue3-cli#readme",
+  "dependencies": {
+    "axios": "^1.4.0",
+    "chalk": "^4.1.2",
+    "commander": "^11.0.0",
+    "download-git-repo": "^3.0.2",
+    "figlet": "^1.6.0",
+    "fs-extra": "^11.1.1",
+    "inquirer": "^8.2.5",
+    "ora": "^5.4.1"
+  }
+}
