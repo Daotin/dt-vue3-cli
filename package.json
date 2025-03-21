@@ -2,20 +2,33 @@
   "name": "dt-vue3-cli",
   "version": "1.0.0",
   "description": "create-vue3-template 模板配套脚手架工具",
-  "main": "index.js",
+  "type": "module",
+  "main": "dist/index.js",
   "bin": {
-    "dt-vue3-cli": "bin/init.js"
+    "dt-vue3-cli": "bin/cli.js"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rollup -c",
+    "dev": "rollup -c -w"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Daotin/dt-vue3-cli.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "vue3",
+    "cli",
+    "template",
+    "create-vue3-template"
+  ],
+  "files": [
+    "bin",
+    "dist",
+    "src"
+  ],
+  "author": "daotin",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/Daotin/dt-vue3-cli/issues"
   },
@@ -29,5 +42,12 @@
     "fs-extra": "^11.1.1",
     "inquirer": "^8.2.5",
     "ora": "^5.4.1"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "rollup": "^4.9.6",
+    "rollup-plugin-terser": "^7.0.2"
   }
 }

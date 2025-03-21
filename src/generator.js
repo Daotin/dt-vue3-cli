@@ -1,10 +1,9 @@
-const ora = require("ora");
-const inquirer = require("inquirer");
-const chalk = require("chalk");
-const path = require("path");
-
-const util = require("util");
-const downloadGitRepo = require("download-git-repo");
+import ora from 'ora';
+import inquirer from 'inquirer';
+import chalk from 'chalk';
+import path from 'path';
+import util from 'util';
+import downloadGitRepo from 'download-git-repo';
 
 // 添加加载动画
 async function loading(message, fn, ...args) {
@@ -21,7 +20,7 @@ async function loading(message, fn, ...args) {
     return Promise.resolve(result);
   } catch (error) {
     // 状态改为失败
-    spinner.fail("Request failed...");
+    spinner.fail('Request failed...');
     return Promise.reject(new Error(error));
   }
 }
@@ -38,18 +37,16 @@ class Generator {
 
   // 创建方法
   async create() {
-    console.log("Generator==>", this.name, this.targetDir);
+    console.log('Generator==>', this.name, this.targetDir);
 
     try {
       // 下载模版到目录
       await this.download();
 
       // 模版创建提示
-      console.log(
-        `\r\n🎉Init ${chalk.cyan(this.name)} Finished🎉. Injoy!\r\n  `
-      );
+      console.log(`\r\n🎉Init ${chalk.cyan(this.name)} Finished🎉. Injoy!\r\n  `);
       console.log(`  cd ${chalk.cyan(this.name)}`);
-      console.log("  npm run dev\r\n");
+      console.log('  npm run dev\r\n');
     } catch (error) {
       console.error(error);
     }
@@ -60,18 +57,18 @@ class Generator {
     // 询问用户仓库名称
     let { repoName } = await inquirer.prompt([
       {
-        name: "repoName",
-        type: "input",
+        name: 'repoName',
+        type: 'input',
         message: `Repo name：`,
-        default: "create-vue3-template",
+        default: 'create-vue3-template',
         choices: [
           {
-            name: "覆盖",
-            value: "cover",
+            name: '覆盖',
+            value: 'cover',
           },
           {
-            name: "取消",
-            value: "cancel",
+            name: '取消',
+            value: 'cancel',
           },
         ],
       },
@@ -80,11 +77,11 @@ class Generator {
     const repoUrl = `direct:https://github.com/Daotin/${repoName}.git`;
     const dir = path.resolve(process.cwd(), this.targetDir);
 
-    console.log("repoUrl==>", repoUrl, dir);
+    console.log('repoUrl==>', repoUrl, dir);
 
     // 调用下载方法;
     await loading(
-      "Downloading...", // 加载提示信息
+      'Downloading...', // 加载提示信息
       this.downloadGitRepo, // 下载方法
       repoUrl, // 下载地址
       dir, // 项目创建位置
@@ -93,4 +90,4 @@ class Generator {
   }
 }
 
-module.exports = Generator;
+export default Generator;
