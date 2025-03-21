@@ -22,7 +22,7 @@ async function createProject(name, options) {
   const cwd = process.cwd();
   // 需要创建的目录地址
   const targetDir = path.join(cwd, name);
-  console.log(targetDir);
+  // console.log(targetDir);
   // 目录是否已存在
   if (fs.existsSync(targetDir)) {
     // 是否创建创建

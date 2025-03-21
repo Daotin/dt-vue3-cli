@@ -7,7 +7,7 @@ export default {
   input: 'src/index.js',
   output: {
     file: 'dist/index.js',
-    format: 'cjs',
+    format: 'esm',
     banner: '#!/usr/bin/env node',
     exports: 'auto',
   },
