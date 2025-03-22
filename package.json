@@ -1,6 +1,6 @@
 {
   "name": "dt-vue3-cli",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "一个简单易用的Vue3项目脚手架工具，用于快速创建Vue3项目模板",
   "type": "module",
   "main": "dist/index.js",
