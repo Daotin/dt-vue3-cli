@@ -4,6 +4,7 @@ import { logger } from "../utils/index.js";
 import semver from "semver";
 import chalk from "chalk";
 import { getVersionInfo } from "../utils/checkUpdate.js";
+import pkg from "../../package.json" assert { type: "json" };
 
 // 将exec转为Promise
 const execPromise = promisify(exec);
@@ -58,9 +59,7 @@ export async function updateCLI() {
       );
 
       // 执行更新
-      const result = await executeUpdate(
-        process.env.npm_package_name || "dt-vue3-cli"
-      );
+      const result = await executeUpdate(pkg.name);
 
       logger.success(`更新成功! 现在版本是 ${chalk.green(latestVersion)}`);
       logger.info("更新日志:");
@@ -74,7 +73,7 @@ export async function updateCLI() {
   } catch (error) {
     logger.error(`更新失败: ${error.message}`);
     logger.info(
-      `可以尝试手动更新: ${chalk.cyan("npm install -g dt-vue3-cli")}`
+      `可以尝试手动更新: ${chalk.cyan(`npm install -g ${pkg.name}`)}`
     );
     return false;
   }
