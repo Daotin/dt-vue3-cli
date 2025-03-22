@@ -3,6 +3,7 @@ import semver from "semver";
 import { logger } from "./index.js";
 import chalk from "chalk";
 import pkg from "../../package.json" assert { type: "json" };
+import { execSync } from "child_process";
 
 /**
  * 获取版本信息
@@ -10,8 +11,30 @@ import pkg from "../../package.json" assert { type: "json" };
  */
 export async function getVersionInfo() {
   try {
-    // 当前版本
-    const currentVersion = pkg.version;
+    let currentVersion;
+
+    // 尝试通过命令获取实际安装的版本
+    try {
+      // 使用npm list -g获取全局安装的版本
+      const output = execSync(`npm list -g ${pkg.name} --json`, {
+        encoding: "utf8",
+      });
+      const npmInfo = JSON.parse(output);
+      // 从dependencies中获取实际版本
+      if (npmInfo && npmInfo.dependencies && npmInfo.dependencies[pkg.name]) {
+        currentVersion = npmInfo.dependencies[pkg.name].version;
+      } else {
+        // 如果获取不到，使用package.json中的版本
+        currentVersion = pkg.version;
+      }
+    } catch (error) {
+      // 如果执行命令失败，使用package.json中的版本
+      currentVersion = pkg.version;
+      if (process.env.NODE_ENV === "development") {
+        logger.warn(`无法获取实际安装版本: ${error.message}`);
+      }
+    }
+
     let latestVersion = currentVersion; // 默认值为当前版本
 
     try {
@@ -48,7 +71,11 @@ export async function checkUpdate() {
     const { currentVersion, latestVersion } = await getVersionInfo();
 
     // 如果当前版本低于最新版本，提示更新
-    if (semver.lt(currentVersion, latestVersion)) {
+    if (
+      currentVersion &&
+      latestVersion &&
+      semver.lt(currentVersion, latestVersion)
+    ) {
       logger.warn("-------------------------");
       logger.warn(`发现新版本: ${chalk.green(latestVersion)}`);
       logger.warn(`当前版本: ${chalk.yellow(currentVersion)}`);

@@ -6,18 +6,32 @@ import chalk from "chalk";
 import figlet from "figlet";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
+import { execSync } from "child_process";
 
 // 导入创建项目命令
 import createProject from "./command/create.js";
 import { updateCLI } from "./command/update.js";
 import { logger } from "./utils/index.js";
 import { checkUpdate } from "./utils/checkUpdate.js";
+import pkg from "../package.json" assert { type: "json" };
 
-// 获取package.json
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const packagePath = path.join(dirname(__dirname), "package.json");
-const package_json = JSON.parse(fs.readFileSync(packagePath, "utf8"));
+// 获取实际安装的CLI版本
+function getInstalledVersion(packageName) {
+  try {
+    // 使用npm list -g获取全局安装的版本
+    const output = execSync(`npm list -g ${packageName} --json`, {
+      encoding: "utf8",
+    });
+    const npmInfo = JSON.parse(output);
+    // 从dependencies中获取实际版本
+    if (npmInfo && npmInfo.dependencies && npmInfo.dependencies[packageName]) {
+      return npmInfo.dependencies[packageName].version;
+    }
+    return pkg.version;
+  } catch (error) {
+    return pkg.version;
+  }
+}
 
 // 创建项目的方法
 async function handleCreate(name, options) {
@@ -68,17 +82,17 @@ async function handleCreate(name, options) {
 
 // 初始化CLI
 async function init() {
-  // 检查版本更新
-  await checkUpdate();
-
   program
     .name("dt-vue3-cli")
     .command("create <app-name>")
     .description("创建一个新项目")
     .option("-f, --force", "覆盖当前目录") // -f or --force 为强制创建，如果创建的目录存在则直接覆盖
     .action((name, options) => {
-      // 输入指令后的回调
-      handleCreate(name, options);
+      // 首先检查更新
+      checkUpdate().then(() => {
+        // 输入指令后的回调
+        handleCreate(name, options);
+      });
     });
 
   // 添加版本检查命令
@@ -88,7 +102,8 @@ async function init() {
     .action(async () => {
       const hasUpdate = await checkUpdate();
       if (!hasUpdate) {
-        logger.info("当前已是最新版本");
+        const currentVersion = getInstalledVersion(pkg.name);
+        logger.info(`当前已是最新版本 ${chalk.green(currentVersion)}`);
       }
     });
 
@@ -101,7 +116,9 @@ async function init() {
     });
 
   // 配置版本号信息
-  program.version(`v${package_json.version}`).usage("<command> [option]");
+  program
+    .version(`v${getInstalledVersion(pkg.name)}`, "-v, --version", "显示版本号")
+    .usage("<command> [option]");
 
   // 配置额外的帮助信息
   program.on("--help", () => {
@@ -122,6 +139,14 @@ async function init() {
       `Run ${chalk.greenBright(`dt-vue3-cli <command> --help`)} show details`
     );
   });
+
+  // 仅在执行命令而不是查看版本号时检查更新
+  if (!process.argv.includes("-v") && !process.argv.includes("--version")) {
+    // 延迟执行版本检查，确保不干扰主要命令输出
+    setTimeout(async () => {
+      await checkUpdate();
+    }, 100);
+  }
 
   program.parse();
 }
