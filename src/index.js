@@ -9,7 +9,9 @@ import { dirname } from "path";
 
 // 导入创建项目命令
 import createProject from "./command/create.js";
+import { updateCLI } from "./command/update.js";
 import { logger } from "./utils/index.js";
+import { checkUpdate } from "./utils/checkUpdate.js";
 
 // 获取package.json
 const __filename = fileURLToPath(import.meta.url);
@@ -65,7 +67,10 @@ async function handleCreate(name, options) {
 }
 
 // 初始化CLI
-function init() {
+async function init() {
+  // 检查版本更新
+  await checkUpdate();
+
   program
     .name("dt-vue3-cli")
     .command("create <app-name>")
@@ -74,6 +79,25 @@ function init() {
     .action((name, options) => {
       // 输入指令后的回调
       handleCreate(name, options);
+    });
+
+  // 添加版本检查命令
+  program
+    .command("update-check")
+    .description("检查版本更新")
+    .action(async () => {
+      const hasUpdate = await checkUpdate();
+      if (!hasUpdate) {
+        logger.info("当前已是最新版本");
+      }
+    });
+
+  // 添加更新命令
+  program
+    .command("update")
+    .description("更新CLI到最新版本")
+    .action(async () => {
+      await updateCLI();
     });
 
   // 配置版本号信息

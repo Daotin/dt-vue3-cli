@@ -1,6 +1,6 @@
 {
   "name": "dt-vue3-cli",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "create-vue3-template 模板配套脚手架工具",
   "type": "module",
   "main": "dist/index.js",
@@ -49,6 +49,7 @@
     "@rollup/plugin-node-resolve": "^15.2.3",
     "log-symbols": "^7.0.0",
     "rollup": "^4.9.6",
-    "rollup-plugin-terser": "^7.0.2"
+    "rollup-plugin-terser": "^7.0.2",
+    "semver": "^7.7.1"
   }
 }

@@ -49,6 +49,9 @@ devDependencies:
   rollup-plugin-terser:
     specifier: ^7.0.2
     version: 7.0.2(rollup@4.36.0)
+  semver:
+    specifier: ^7.7.1
+    version: 7.7.1
 
 packages:
 
@@ -1570,6 +1573,12 @@ packages:
     dependencies:
       commander: 2.20.3
     dev: false
+
+  /semver@7.7.1:
+    resolution: {integrity: sha512-hlq8tAfn0m/61p4BVRcPzIGr6LKiMwo4VM6dGi6pt4qcRkmNzTcWq6eCEjEh+qXjkMDvPlOFFSGwQjoEa6gyMA==}
+    engines: {node: '>=10'}
+    hasBin: true
+    dev: true
 
   /serialize-javascript@4.0.0:
     resolution: {integrity: sha512-GaNA54380uFefWghODBWEGisLZFj00nS5ACs6yHa9nLqlLpVLO8ChDGeKRjZnV4Nh4n0Qi7nhYZD/9fCPzEqkw==}
