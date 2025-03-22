@@ -1,7 +1,7 @@
 import inquirer from "inquirer";
 import chalk from "chalk";
 import path from "path";
-import { loading, downloadRepo } from "../utils/index.js";
+import { loading, downloadRepo, logger } from "../utils/index.js";
 
 // 下载远程模版
 async function downloadTemplate(name, targetDir) {
@@ -28,7 +28,8 @@ async function downloadTemplate(name, targetDir) {
   const repoUrl = `direct:https://github.com/Daotin/${repoName}.git`;
   const dir = path.resolve(process.cwd(), targetDir);
 
-  console.log("repoUrl==>", repoUrl, dir);
+  logger.info(`下载地址: ${repoUrl}`);
+  logger.info(`目标目录: ${dir}`);
 
   // 调用下载方法
   await loading(
@@ -42,18 +43,18 @@ async function downloadTemplate(name, targetDir) {
 
 // 创建项目函数
 async function createProject(name, targetDir) {
-  console.log("Creating project==>", name, targetDir);
+  logger.info(`开始创建项目: ${name}`);
 
   try {
     // 下载模版到目录
     await downloadTemplate(name, targetDir);
 
     // 模版创建提示
-    console.log(`\r\n🎉Init ${chalk.cyan(name)} Finished🎉. Injoy!\r\n  `);
-    console.log(`  cd ${chalk.cyan(name)}`);
-    console.log("  npm run dev\r\n");
+    logger.success(`🎉Init ${chalk.cyan(name)} Finished🎉. Injoy!`);
+    logger.info(`  cd ${chalk.cyan(name)}`);
+    logger.info("  npm run dev");
   } catch (error) {
-    console.error(error);
+    logger.error(`创建项目失败: ${error.message}`);
   }
 }
 

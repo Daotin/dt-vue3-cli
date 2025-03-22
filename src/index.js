@@ -9,6 +9,7 @@ import { dirname } from "path";
 
 // 导入创建项目命令
 import createProject from "./command/create.js";
+import { logger } from "./utils/index.js";
 
 // 获取package.json
 const __filename = fileURLToPath(import.meta.url);
@@ -53,7 +54,7 @@ async function handleCreate(name, options) {
         return;
       } else if (dirAction === "cover") {
         // 移除已存在的目录
-        console.log(`\r\nRemoving...`);
+        logger.warn(`正在删除目录: ${targetDir}`);
         await fs.remove(targetDir);
       }
     }
@@ -93,10 +94,8 @@ function init() {
     );
 
     // 新增说明信息
-    console.log(
-      `\r\nRun ${chalk.greenBright(
-        `dt-vue3-cli <command> --help`
-      )} show details\r\n`
+    logger.info(
+      `Run ${chalk.greenBright(`dt-vue3-cli <command> --help`)} show details`
     );
   });
 
